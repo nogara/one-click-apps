@@ -1,0 +1,88 @@
+captainVersion: 4
+services:
+    # nginx
+    $$cap_appname:
+        depends_on:
+            - $$cap_appname-app
+        image: nogara/sesdashboard-nginx:$$cap_sesdashboard_version
+        restart: 'always'
+        environment:
+            API_URL: srv-captain--$$cap_appname-app:9000
+    # SESDashboard
+    $$cap_appname-app:
+        depends_on:
+            - $$cap_appname-mysql
+        image: nogara/sesdashboard:$$cap_sesdashboard_version
+        restart: 'always'
+        environment:
+            MYSQL_HOST: srv-captain--$$cap_appname-mysql
+            MYSQL_DATABASE: $$cap_mysql-db
+            MYSQL_USER: $$cap_mysql-user
+            MYSQL_PASSWORD: $$cap_mysql-pass
+            MYSQL_PORT: '3306'
+            DATABASE_URL: mysql://$$cap_mysql-user:$$cap_mysql-pass@srv-captain--$$cap_appname-mysql:3306/$$cap_mysql-db?serverVersion=8
+            ADMIN_USERNAME: $$cap_admin_user
+            ADMIN_EMAIL: $$cap_admin_email
+            ADMIN_PASSWORD: $$cap_admin_password
+        caproverExtra:
+            notExposeAsWebApp: 'true'
+    # Mysql
+    $$cap_appname-mysql:
+        image: mysql:$$cap_mysql_version
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: '1'
+            MYSQL_DATABASE: $$cap_mysql-db
+            MYSQL_USER: $$cap_mysql-user
+            MYSQL_PASSWORD: $$cap_mysql-pass
+        volumes:
+            - $$cap_appname-mysql-data:/var/lib/mysql
+        restart: unless-stopped
+        caproverExtra:
+            notExposeAsWebApp: 'true'
+
+caproverOneClickApp:
+    variables:
+        - id: $$cap_sesdashboard_version
+          label: SESDashboard Docker version
+          defaultValue: 'latest'
+          description: Check out this page for the valid tags Find on https://hub.docker.com/nogara/sesdashboard?tab=tags.
+        - id: $$cap_mysql_version
+          label: Mysql Version
+          defaultValue: '8.0'
+          description: Check out their docker page for the valid tags https://hub.docker.com/r/library/mysql/tags/
+          validRegex: /^([^\s^\/])+$/
+        - id: $$cap_mysql-db
+          label: MySQL Database
+          description: Database name for MySQL
+          defaultValue: 'sesdashboard'
+        - id: $$cap_mysql-user
+          label: MySQL User
+          description: Database User for SESDashboard
+          defaultValue: 'sesdashboard'
+        - id: $$cap_mysql-pass
+          label: MySQL database user password
+          description: Super secret database user password
+        - id: $$cap_admin_user
+          label: Admin User
+          description: Admin user for SESDashboard
+          defaultValue: 'admin'
+        - id: $$cap_admin_email
+          label: Admin Email
+          description: Admin email for SESDashboard
+          defaultValue: ''
+        - id: $$cap_admin_password
+          label: Admin Password
+          description: Super secret admin password
+          defaultValue: ''
+          validRegex: /^[A-Za-z0-9]+$/
+    instructions:
+        start: >-
+            SESDashboard Analytics UI for Amazon Simple Email Service
+        end: >-
+            Aaaand you're done! 😄
+
+            Access  https://$$cap_appname.$$cap_root_domain from your host system. If this looks ok, add your first user account.
+    displayName: 'SESDashboard'
+    isOfficial: false
+    description: SESDashboard Analytics UI for Amazon Simple Email Service
+    documentation: Taken from https://github.com/Nikeev/sesdashboard
