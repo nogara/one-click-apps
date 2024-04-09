@@ -1,0 +1,37 @@
+captainVersion: 4
+services:
+    $$cap_appname:
+        image: nogara/whisper-simple-telegram-bot:$$cap_version
+        restart: 'always'
+        environment:
+            OPENAI_API_KEY: $$cap_openai_api_key
+            TELEGRAM_BOT_TOKEN: $$cap_telegram_bot_token
+            ALLOWED_TELEGRAM_USERNAMES: $$cap_allowed_telegram_usernames
+        caproverExtra:
+            notExposeAsWebApp: 'true'
+caproverOneClickApp:
+    variables:
+        - id: $$cap_version
+          label: Version of the Whisper Simple Telegram Bot
+          defaultValue: 'v1.0'
+          description: Check out this page for the valid tags Find on https://hub.docker.com/nogara/whisper-simple-telegram-bot?tab=tags
+        - id: $$cap_openai_api_key
+          label: OpenAI API Key
+          description: OpenAI API Key
+        - id: $$cap_telegram_bot_token
+          label: Telegram Bot Token
+          description: Bot Token created from BotFather
+        - id: $$cap_allowed_telegram_usernames
+          label: Allowed Telegram Usernames
+          description: Comma separated list of Telegram usernames allowed to interact with the bot
+    instructions:
+        start: >-
+            Welcome to Whisper Simple Telegram Bot! 🤖
+
+            This is a simple Telegram bot that uses OpenAI's Whisper to transcribe voice messages to text..
+        end: >-
+            Aaaand you're done! 😄
+    displayName: 'Whisper Telegram Bot'
+    isOfficial: false
+    description: 'A simple Telegram bot that uses OpenAI Whisper to transcribe voice messages to text.'
+    documentation: https://github.com/nogara/whisper-simple-telegram-bot
