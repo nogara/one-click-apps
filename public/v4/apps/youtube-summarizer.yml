@@ -1,0 +1,27 @@
+captainVersion: 4
+services:
+    $$cap_appname:
+        image: nogara/youtube-summarizer:$$cap_version
+        restart: 'always'
+        environment:
+            OPENAI_API_KEY: $$cap_openai_api_key
+caproverOneClickApp:
+    variables:
+        - id: $$cap_version
+          label: Version of the YouTube Summarizer
+          defaultValue: 'v1.0'
+          description: Check out this page for the valid tags Find on https://hub.docker.com/nogara/youtube-summarizer?tab=tags
+        - id: $$cap_openai_api_key
+          label: OpenAI API Key
+          description: OpenAI API Key
+    instructions:
+        start: >-
+            Welcome to YouTube Summarizer! 🎉
+
+            This is a simple Streamlit app that uses OpenAI's GPT-* to summarize YouTube videos. 🤖
+        end: >-
+            Aaaand you're done! 😄
+    displayName: 'YouTube Summarizer'
+    isOfficial: false
+    description: 'This is a simple Streamlit app that uses OpenAI GPT-* to summarize YouTube videos.'
+    documentation: https://github.com/nogara/youtube-summarizer
