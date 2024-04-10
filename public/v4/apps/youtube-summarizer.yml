@@ -7,6 +7,7 @@ services:
             OPENAI_API_KEY: $$cap_openai_api_key
         caproverExtra:
             containerHttpPort: '8501'
+            websocketSupport: true
 caproverOneClickApp:
     variables:
         - id: $$cap_version
