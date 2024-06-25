@@ -1,0 +1,62 @@
+captainVersion: 4
+services:
+    $$cap_appname:
+        image: domainmod/domainmod:$$cap_domainmod_version
+        environment:
+            TZ: $$cap_tz
+            PUID: '1000'
+            PGID: '1000'
+            DOMAINMOD_WEB_ROOT: $$cap_domainmod_webroot
+            DOMAINMOD_DATABASE_HOST: $$cap_domainmod_db_host
+            DOMAINMOD_DATABASE: $$cap_domainmod_db_database
+            DOMAINMOD_USER: $$cap_domainmod_db_user
+            DOMAINMOD_PASSWORD: $$cap_domainmod_db_password
+        restart: unless-stopped
+        caproverExtra:
+            containerHttpPort: '80'
+caproverOneClickApp:
+    variables:
+        - id: $$cap_domainmod_version
+          label: DomainMOD Version
+          defaultValue: '4'
+          description: Check out their Docker page for the valid tags https://hub.docker.com/r/domainmod/domainmod/tags
+          validRegex: /^([^\s^\/])+$/
+        - id: $$cap_tz
+          label: Time Zone
+          defaultValue: US/Eastern
+          description: Get yours from https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+          validRegex: /.{1,}/
+        - id: $$cap_domainmod_webroot
+          description: Set this if you plan on running DomainMOD in a subdirectory
+          defaultValue: ''
+          label: Webroot (optional)
+        - id: $$cap_domainmod_db_host
+          description: Database host
+          defaultValue: srv-captain--xxx
+          label: Database Host
+        - id: $$cap_domainmod_db_database
+          description: Database name
+          defaultValue: domainmod
+          label: Database name
+        - id: $$cap_domainmod_db_user
+          description: Database user
+          defaultValue: domainmod
+          label: Database user
+        - id: $$cap_domainmod_db_password
+          description: Database password
+          defaultValue: $$cap_gen_random_hex(16)
+          label: Database password
+          validRegex: /.{1,}/
+
+    instructions:
+        start: |-
+            DomainMOD is a self-hosted open source application used to manage your domains and other Internet assets in a central location.
+            Requires a user and database in either mysql or mariadb.
+        end: |-
+            DomainMOD is deployed and available as http://$$cap_appname.$$cap_root_domain.
+            Wait for few minutes to configure the app.
+            Follow the setup wizard on initial install. Then configure the required services.
+    displayName: DomainMOD
+    isOfficial: false
+    description: DomainMOD is a self-hosted open source application used to manage your domains and other Internet assets in a central location
+    documentation: Taken from https://github.com/domainmod/domainmod. Website -  https://domainmod.org/
